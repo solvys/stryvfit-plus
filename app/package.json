@@ -1,0 +1,47 @@
+{
+  "name": "stryvfit-plus",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf:upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "lint": "next lint",
+    "test": "bun test",
+    "smoke:support": "node scripts/smoke-support-pipeline.mjs",
+    "typecheck": "tsc --noEmit",
+    "supabase:start": "supabase start",
+    "supabase:status": "supabase status",
+    "supabase:reset": "supabase db reset",
+    "supabase:push": "supabase db push"
+  },
+  "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "date-fns": "^3.6.0",
+    "framer-motion": "^11.3.0",
+    "lenis": "^1.3.23",
+    "lucide-react": "^0.460.0",
+    "next": "15.5.18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "stripe": "^17.0.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.19.10",
+    "@types/node": "^22.7.0",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "15.5.18",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "wrangler": "^4.92.0"
+  }
+}

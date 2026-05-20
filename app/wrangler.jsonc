@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "stryvfit-plus",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-05-18",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+    "html_handling": "none"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "stryvfit-plus"
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_APP_URL": "https://app.stryvsocietyfit.com",
+    "NEXT_PUBLIC_CAL_ORIGIN": "https://cal.stryvsocietyfit.com",
+    "NEXT_PUBLIC_CAL_USERNAME": "stryv",
+    "NEXT_PUBLIC_CAL_EVENT_FREE": "free-first-session",
+    "NEXT_PUBLIC_CAL_EVENT_COACHING": "coaching-session",
+    "NEXT_PUBLIC_CAL_EVENT_PREMIUM": "premium-session",
+    "NEXT_PUBLIC_CAL_EVENT_MEAL_PREP": "meal-prep-planning",
+    "WGER_API_BASE_URL": "https://workouts.stryvsocietyfit.com"
+  }
+}

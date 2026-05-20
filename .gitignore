@@ -1,0 +1,23 @@
+.DS_Store
+*.log
+
+.idea/
+.claude/
+.mcp.json
+
+_audit/
+Stock/Training Shots/
+
+app/node_modules/
+app/.next/
+app/.open-next/
+app/.wrangler/
+app/cloudflare-env.d.ts
+app/tsconfig.tsbuildinfo
+app/test-results/
+app/supabase/.temp/
+
+*.env
+*.env.local
+!.env.example
+!app/.dev.vars

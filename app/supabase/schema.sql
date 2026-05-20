@@ -1,0 +1,7 @@
+-- Source of truth moved to:
+-- supabase/migrations/20260512195556_init_stryvfit_core.sql
+--
+-- For dashboard setup, paste and run the migration file above.
+-- For CLI setup:
+--   supabase link --project-ref <project-ref>
+--   supabase db push

@@ -1,0 +1,90 @@
+# SSFitness ChatGPT Handoff
+
+Primary entrypoint for a future ChatGPT/Codex session working on Stryv Society Fitness.
+
+## First Response Protocol
+
+When TP says: "Good Afternoon Chat, this is TP, your FDE. We're about to begin onboarding, please set everything up", respond as the SSFitness onboarding agent.
+
+1. Confirm the repo root is `/Users/tifos/Desktop/SSFitness`.
+2. Read this file, `app/README.md`, `infra/wger/README.md`, `app/.env.example`, and the relevant route/component files before changing anything.
+3. Inspect environment health before guessing: check app envs, dev server status, `/api/incidents`, `/api/wger/exercises`, and current admin routes.
+4. Explain what is ready, what is simulated, and what needs credentials or cloud provisioning.
+5. Guide the operator in plain language, then use browser automation or terminal commands only when the target is clear.
+
+Do not invent client records, subscription state, workout data, meal selections, or support status. Use visible UI state, Supabase-backed data, wger responses, or ask TP.
+
+## Current Product Shape
+
+SSFitness is a Next.js PWA for Stryv Society Fitness. It has two main experiences:
+
+- Client-facing phase flow: `/book`
+- Admin/trainer operating surfaces: `/admin/pulse`, `/admin/workouts`, `/admin/settings`
+
+The client app is intended to feel full-screen and phase-by-phase. When no training session is scheduled, the user sees the calendar only. Meal prep and journaling are accessed from the floating bottom-right hamburger menu. When a remote session is scheduled, the workout appears after a countdown. After workout completion, the user swipes right or down, or taps continue, and the app briefly deliberates before choosing the next phase.
+
+The admin app is a non-technical trainer studio. It lets the Stryv team manage appointments, meal plans, workout routines, client readiness, support requests, and wger-backed exercise choices.
+
+## Current State Snapshot
+
+- `app/src/components/client/ClientPhaseFlow.tsx`: client full-screen phase flow, URL-driven session/payment demos, theme toggle, floating menu, workout, meal prep, journal, payment modal.
+- `app/src/components/admin/TrainerOpsStudio.tsx`: appointment and meal command center for StryvAdmin.
+- `app/src/components/admin/AdminWorkoutsPage.tsx`: workout builder, client selector, wger exercise library, training week, remote video notes, support chat, schedule timeline.
+- `app/src/components/admin/AdminSupportChat.tsx`: admin support request form that posts incidents into the Solvys support pipeline.
+- `app/src/lib/wger.ts`: server-side wger exercise normalizer and fallback exercise set.
+- `infra/wger`: self-hosted wger cloud stack with Caddy, nginx, web, Postgres, Redis, Celery worker, Celery beat, env templates, and backup script.
+
+## Routes
+
+- `/`: public landing page.
+- `/book`: client app phase flow. Query helpers currently include `?session=remote`, `?session=in-person`, and `?pastDueDays=7`.
+- `/meals`: standalone Ideal Nutrition meal prep picker.
+- `/notes`: placeholder trainer notes page.
+- `/coach`: iMessage CTA to the configured trainer phone.
+- `/admin/pulse`: StryvAdmin appointment and meal command center.
+- `/admin/workouts`: trainer workout builder with wger exercise library.
+- `/admin/settings`: trainer phone/name settings.
+- `/api/wger/exercises`: server proxy for exercise lookup from `WGER_API_BASE_URL`.
+- `/api/incidents`: incident health, support capture, dedupe, and Linear filing.
+- `/api/incidents/sync-resolution`: marks incidents resolved and publishes update records.
+
+## Runtime Dependencies
+
+- Supabase: auth, app settings, support incidents, update records, future client data.
+- Stripe: subscription/payment state; currently not fully wired into the client phase gate.
+- Google Calendar handoff: local themed scheduler creates Google Calendar event URLs.
+- Ideal Nutrition Browserbase ingestion: meal data source through `BROWSERBASE_API_KEY`, with fallback behavior in code.
+- Linear: Solvys support issue filing from incidents.
+- wger: self-hosted exercise/workout data source via `WGER_API_BASE_URL`.
+- PWA runtime: manifest, service worker, install-to-home-screen flow.
+
+## Known Simulation And Pending Wiring
+
+- Client session state currently uses URL query params. `?session=remote` opens the remote countdown/workout path; no live booking-session lookup is wired yet.
+- Payment state currently uses `?pastDueDays=7` style demo state. Stripe/Supabase subscription state still needs production wiring.
+- Payment prompts intentionally appear only during phase progression, not on the home calendar.
+- Booking lockout should happen at 7+ days past due once production subscription state is connected.
+- "Post to client" is currently UX/stateful feedback. It is not a full persistence/publish pipeline until a backend write path is added.
+- `/admin/workouts` reads wger exercise data through the app proxy but does not yet write private wger routines.
+
+## Validation Gates
+
+Run from `app/` unless noted:
+
+```bash
+npm run typecheck
+npm run build
+curl -fsS http://localhost:3001/api/wger/exercises?limit=2
+bun run smoke:support
+```
+
+Use `RUN_LIVE_INCIDENT_SMOKE=1 bun run smoke:support` only when Supabase and Linear envs are configured and TP expects a real support incident/Linear ticket.
+
+## Related Handoff Docs
+
+- `docs/OPERATOR-GUIDE.md`: non-technical guide for client/admin app usage.
+- `docs/CHATGPT-CONTROL-PROTOCOL.md`: how ChatGPT/Codex should control and support the admin UI.
+- `docs/SUPPORT-PROTOCOL.md`: Solvys support engine and incident workflow.
+- `docs/WGER-HANDOFF.md`: wger cloud/app integration guide.
+- `app/README.md`: developer setup summary.
+- `infra/wger/README.md`: deploy/runbook for the self-hosted wger stack.
