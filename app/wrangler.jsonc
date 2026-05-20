@@ -2,6 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "stryvfit-plus",
   "main": ".open-next/worker.js",
+  "workers_dev": true,
   "compatibility_date": "2026-05-18",
   "compatibility_flags": [
     "nodejs_compat",
@@ -16,6 +17,24 @@
     {
       "binding": "WORKER_SELF_REFERENCE",
       "service": "stryvfit-plus"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "stryvsocietyfit.com/*",
+      "zone_id": "4983dc13cab005664bbcd554c936df73"
+    },
+    {
+      "pattern": "www.stryvsocietyfit.com/*",
+      "zone_id": "4983dc13cab005664bbcd554c936df73"
+    },
+    {
+      "pattern": "app.stryvsocietyfit.com/*",
+      "zone_id": "4983dc13cab005664bbcd554c936df73"
+    },
+    {
+      "pattern": "book.stryvsocietyfit.com/*",
+      "zone_id": "4983dc13cab005664bbcd554c936df73"
     }
   ],
   "vars": {
